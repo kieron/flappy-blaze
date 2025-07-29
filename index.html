@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Runner Game - Simple Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Lincolnshirecompetitions.co.uk</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 0;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,11 +25,17 @@
             position: relative;
             border: 2px solid #535353;
             background: #fff;
+            max-width: 100%;
+            max-height: 90vh;
         }
 
         canvas {
             display: block;
             background: #fff;
+            width: 100%;
+            height: auto;
+            max-width: 800px;
+            max-height: 300px;
         }
 
         .ui-overlay {
@@ -41,6 +51,7 @@
             background: rgba(255, 255, 255, 0.95);
             color: #535353;
             text-align: center;
+            padding: 20px;
         }
 
         .hidden {
@@ -48,50 +59,137 @@
         }
 
         h1 {
-            font-size: 36px;
+            font-size: clamp(24px, 6vw, 36px);
             margin: 0 0 20px 0;
             color: #535353;
             font-weight: bold;
         }
 
         .start-btn, .restart-btn {
-            font-size: 18px;
-            padding: 12px 24px;
+            font-size: clamp(16px, 4vw, 18px);
+            padding: 15px 30px;
             background: #535353;
             color: white;
             border: none;
             cursor: pointer;
             font-family: 'Courier New', monospace;
             font-weight: bold;
+            border-radius: 5px;
+            min-height: 44px; /* iOS touch target minimum */
+            touch-action: manipulation;
         }
 
         .start-btn:hover, .restart-btn:hover {
             background: #333;
         }
 
+        .start-btn:active, .restart-btn:active {
+            background: #222;
+            transform: scale(0.95);
+        }
+
         .score {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 20px;
+            top: 10px;
+            right: 15px;
+            font-size: clamp(16px, 4vw, 20px);
             font-weight: bold;
             color: #535353;
             font-family: 'Courier New', monospace;
             z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 3px;
         }
 
         .instructions {
-            font-size: 16px;
+            font-size: clamp(14px, 3.5vw, 16px);
             margin: 20px 0;
             color: #535353;
             line-height: 1.5;
+            max-width: 300px;
         }
 
         .game-over-score {
-            font-size: 24px;
+            font-size: clamp(18px, 5vw, 24px);
             margin: 20px 0;
             font-weight: bold;
             color: #535353;
+        }
+
+        .mobile-instructions {
+            display: none;
+            font-size: clamp(12px, 3vw, 14px);
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .game-container {
+                border: 1px solid #535353;
+            }
+
+            .score {
+                top: 5px;
+                right: 10px;
+                font-size: 16px;
+            }
+
+            .mobile-instructions {
+                display: block;
+            }
+
+            /* Make touch area larger on mobile */
+            .start-btn, .restart-btn {
+                padding: 18px 40px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 2px;
+            }
+
+            h1 {
+                margin-bottom: 15px;
+            }
+
+            .instructions {
+                margin: 15px 0;
+            }
+
+            .game-over-score {
+                margin: 15px 0;
+            }
+        }
+
+        /* Landscape mobile orientation */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .ui-overlay {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .instructions {
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
+            .start-btn, .restart-btn {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -106,6 +204,7 @@
             <div class="instructions">
                 Press SPACEBAR or CLICK to jump<br>
                 Jump over the obstacles!
+                <div class="mobile-instructions">Tap anywhere to jump</div>
             </div>
             <button class="start-btn" onclick="startGame()">Start Game</button>
         </div>
@@ -125,12 +224,36 @@
         const gameOverScreen = document.getElementById('gameOverScreen');
         const finalScoreElement = document.getElementById('finalScore');
 
+        // Mobile responsiveness
+        let scale = 1;
+        
+        function resizeCanvas() {
+            const container = document.querySelector('.game-container');
+            const containerWidth = container.clientWidth - 4; // Account for border
+            const containerHeight = container.clientHeight - 4;
+            
+            // Calculate scale to fit container while maintaining aspect ratio
+            const scaleX = containerWidth / 800;
+            const scaleY = containerHeight / 300;
+            scale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+            
+            // Apply scaling
+            canvas.style.width = (800 * scale) + 'px';
+            canvas.style.height = (300 * scale) + 'px';
+        }
+
         // Game state
         let gameState = 'start';
         let score = 0;
         let highScore = localStorage.getItem('runnerGameHighScore') || 0;
         let gameSpeed = 4;
         let groundY = canvas.height - 50; // Ground level
+
+        // Adjust game speed for mobile
+        function getAdjustedSpeed() {
+            const isMobile = window.innerWidth <= 768;
+            return isMobile ? gameSpeed * 0.8 : gameSpeed; // Slightly slower on mobile
+        }
 
         // Player character - runs along the ground
         const player = {
@@ -233,8 +356,10 @@
         function updateObstacles() {
             if (gameState !== 'playing') return;
             
+            const currentSpeed = getAdjustedSpeed();
+            
             for (let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].x -= gameSpeed;
+                obstacles[i].x -= currentSpeed;
                 
                 // Remove off-screen obstacles
                 if (obstacles[i].x + obstacles[i].width < 0) {
@@ -261,8 +386,9 @@
                 }
             }
             
-            // Create new obstacles
-            if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - 300) {
+            // Create new obstacles - adjust spacing for mobile
+            const spacing = window.innerWidth <= 768 ? 350 : 300;
+            if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - spacing) {
                 createObstacle();
             }
         }
@@ -318,7 +444,8 @@
             
             // Update ground scrolling
             if (gameState === 'playing') {
-                groundOffset -= gameSpeed;
+                const currentSpeed = getAdjustedSpeed();
+                groundOffset -= currentSpeed;
                 if (groundOffset <= -20) {
                     groundOffset = 0;
                 }
@@ -384,18 +511,27 @@
             }
         });
 
-        canvas.addEventListener('click', () => {
-            if (gameState === 'start') {
-                startGame();
-            } else if (gameState === 'playing') {
-                player.jump();
-            } else if (gameState === 'gameOver') {
-                startGame();
-            }
-        });
+        // Enhanced mobile touch controls
+        let touchStarted = false;
 
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            touchStarted = true;
+            handleTouch();
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            touchStarted = false;
+        });
+
+        canvas.addEventListener('click', (e) => {
+            if (!touchStarted) { // Only handle click if not a touch event
+                handleTouch();
+            }
+        });
+
+        function handleTouch() {
             if (gameState === 'start') {
                 startGame();
             } else if (gameState === 'playing') {
@@ -403,9 +539,35 @@
             } else if (gameState === 'gameOver') {
                 startGame();
             }
+        }
+
+        // Handle screen rotation and resize
+        window.addEventListener('resize', () => {
+            setTimeout(resizeCanvas, 100); // Small delay to ensure layout is updated
         });
 
-        // Start the game loop
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeCanvas, 500); // Longer delay for orientation change
+        });
+
+        // Prevent zoom on double tap (iOS)
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Initialize
+        resizeCanvas();
         gameLoop();
     </script>
 </body>
