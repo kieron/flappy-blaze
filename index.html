@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird - Blazing Fun!!</title>
+    <title>Runner Game - Simple Style</title>
     <style>
         body {
             margin: 0;
@@ -12,35 +12,20 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #FF4500 0%, #FF6347 50%, #FFD700 100%);
-            font-family: 'Arial Black', Arial, sans-serif;
+            background: #f7f7f7;
+            font-family: 'Courier New', monospace;
             overflow: hidden;
-            animation: backgroundPulse 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes backgroundPulse {
-            0% { background: linear-gradient(135deg, #FF4500 0%, #FF6347 50%, #FFD700 100%); }
-            100% { background: linear-gradient(135deg, #FF6347 0%, #FF4500 50%, #FFA500 100%); }
         }
 
         .game-container {
             position: relative;
-            border: 4px solid #FF4500;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.4);
-            background: #FF6347;
-            animation: containerGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes containerGlow {
-            0% { box-shadow: 0 15px 40px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.4); }
-            100% { box-shadow: 0 15px 40px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+            border: 2px solid #535353;
+            background: #fff;
         }
 
         canvas {
             display: block;
-            background: linear-gradient(to bottom, #FF4500 0%, #FF6347 30%, #FFD700 70%, #FFA500 100%);
-            border-radius: 11px;
+            background: #fff;
         }
 
         .ui-overlay {
@@ -53,10 +38,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(45deg, rgba(255, 69, 0, 0.9), rgba(255, 140, 0, 0.9));
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            color: #535353;
             text-align: center;
-            border-radius: 11px;
         }
 
         .hidden {
@@ -64,113 +48,72 @@
         }
 
         h1 {
-            font-size: 52px;
+            font-size: 36px;
             margin: 0 0 20px 0;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.7);
-            color: #FFD700;
-            animation: titleFlame 1.5s ease-in-out infinite alternate;
-            font-weight: 900;
-        }
-
-        @keyframes titleFlame {
-            0% { 
-                color: #FFD700; 
-                text-shadow: 4px 4px 8px rgba(0,0,0,0.7), 0 0 20px rgba(255, 215, 0, 0.5);
-            }
-            100% { 
-                color: #FFA500; 
-                text-shadow: 4px 4px 8px rgba(0,0,0,0.7), 0 0 30px rgba(255, 165, 0, 0.8);
-            }
+            color: #535353;
+            font-weight: bold;
         }
 
         .start-btn, .restart-btn {
-            font-size: 26px;
-            padding: 18px 40px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #8B0000;
-            border: 3px solid #FF4500;
-            border-radius: 30px;
+            font-size: 18px;
+            padding: 12px 24px;
+            background: #535353;
+            color: white;
+            border: none;
             cursor: pointer;
-            font-weight: 900;
-            box-shadow: 0 8px 20px rgba(255, 69, 0, 0.4);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
         }
 
         .start-btn:hover, .restart-btn:hover {
-            background: linear-gradient(45deg, #FFA500, #FF6347);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 25px rgba(255, 69, 0, 0.6);
-            color: white;
+            background: #333;
         }
 
         .score {
             position: absolute;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 42px;
-            font-weight: 900;
-            color: #FFD700;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 15px rgba(255, 215, 0, 0.6);
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #535353;
+            font-family: 'Courier New', monospace;
             z-index: 10;
-            animation: scoreGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes scoreGlow {
-            0% { color: #FFD700; }
-            100% { color: #FFA500; }
         }
 
         .instructions {
-            font-size: 20px;
-            margin: 25px 0;
-            opacity: 0.95;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 16px;
+            margin: 20px 0;
+            color: #535353;
+            line-height: 1.5;
         }
 
         .game-over-score {
-            font-size: 32px;
-            margin: 25px 0;
+            font-size: 24px;
+            margin: 20px 0;
             font-weight: bold;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
-
-        .game-text {
-            font-size: 16px;
-            margin: 15px 0;
-            color: #FFD700;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #535353;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <canvas id="gameCanvas" width="480" height="640"></canvas>
+        <canvas id="gameCanvas" width="800" height="300"></canvas>
         
         <div class="score hidden" id="score">0</div>
         
         <div class="ui-overlay" id="startScreen">
-            <h1>🔥 FLAPPY Bird 🔥</h1>
-            <div class="game-text">🔥 BLAZING ARCADE ACTION! 🔥</div>
+            <h1>Runner Game</h1>
             <div class="instructions">
-                Press SPACEBAR or CLICK to flap!<br>
-                Navigate through the fire gates!<br>
-                🔥 How high can you score? 🔥
+                Press SPACEBAR or CLICK to jump<br>
+                Jump over the obstacles!
             </div>
-            <button class="start-btn" onclick="startGame()">🎮 START GAME 🎮</button>
+            <button class="start-btn" onclick="startGame()">Start Game</button>
         </div>
         
         <div class="ui-overlay hidden" id="gameOverScreen">
-            <h1>🔥 GAME OVER! 🔥</h1>
+            <h1>Game Over</h1>
             <div class="game-over-score" id="finalScore">Score: 0</div>
-            <div class="game-text">🔥 BLAZING PERFORMANCE! 🔥</div>
-            <button class="restart-btn" onclick="startGame()">🔄 PLAY AGAIN 🔄</button>
+            <button class="restart-btn" onclick="startGame()">Play Again</button>
         </div>
     </div>
 
@@ -185,272 +128,209 @@
         // Game state
         let gameState = 'start';
         let score = 0;
-        let highScore = localStorage.getItem('flappyBlazeHighScore') || 0;
-        let flames = [];
+        let highScore = localStorage.getItem('runnerGameHighScore') || 0;
+        let gameSpeed = 4;
+        let groundY = canvas.height - 50; // Ground level
 
-        // Flame particle system
-        class Flame {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.vx = (Math.random() - 0.5) * 4;
-                this.vy = Math.random() * -3 - 1;
-                this.life = 1;
-                this.decay = Math.random() * 0.02 + 0.01;
-                this.size = Math.random() * 8 + 4;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vy += 0.1;
-                this.life -= this.decay;
-                this.size *= 0.98;
-            }
-
-            draw() {
-                if (this.life <= 0) return;
-                
-                const alpha = this.life;
-                const hue = Math.random() * 60; // Red to yellow range
-                
-                ctx.save();
-                ctx.globalAlpha = alpha;
-                ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // Bird object with flame trail
-        const bird = {
-            x: 100,
-            y: canvas.height / 2,
-            width: 45,
-            height: 35,
+        // Player character - runs along the ground
+        const player = {
+            x: 80,
+            y: groundY - 25, // Start on ground
+            width: 25,
+            height: 25,
             velocity: 0,
-            gravity: 0.5,
-            jumpStrength: -10,
+            gravity: 0.8,
+            jumpStrength: -15,
+            isJumping: false,
+            groundY: groundY - 25,
             
             update() {
                 if (gameState === 'playing') {
+                    // Apply gravity
                     this.velocity += this.gravity;
                     this.y += this.velocity;
                     
-                    // Add flame trail
-                    if (Math.random() < 0.3) {
-                        flames.push(new Flame(this.x, this.y + this.height));
+                    // Land on ground
+                    if (this.y >= this.groundY) {
+                        this.y = this.groundY;
+                        this.velocity = 0;
+                        this.isJumping = false;
                     }
                     
+                    // Prevent going above screen
                     if (this.y < 0) {
                         this.y = 0;
                         this.velocity = 0;
-                    }
-                    if (this.y + this.height > canvas.height) {
-                        this.y = canvas.height - this.height;
-                        this.velocity = 0;
-                        gameOver();
                     }
                 }
             },
             
             jump() {
-                if (gameState === 'playing') {
+                if (gameState === 'playing' && !this.isJumping) {
                     this.velocity = this.jumpStrength;
-                    // Add explosion of flames on jump
-                    for (let i = 0; i < 8; i++) {
-                        flames.push(new Flame(this.x + this.width/2, this.y + this.height/2));
-                    }
+                    this.isJumping = true;
                 }
             },
             
             draw() {
-                // Bird body - now looks more like a fireball
-                const gradient = ctx.createRadialGradient(
-                    this.x + this.width/2, this.y + this.height/2, 0,
-                    this.x + this.width/2, this.y + this.height/2, this.width/2
-                );
-                gradient.addColorStop(0, '#FFD700');
-                gradient.addColorStop(0.5, '#FF6347');
-                gradient.addColorStop(1, '#FF4500');
+                // Simple square runner
+                ctx.fillStyle = '#FF6347';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
                 
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
-                ctx.fill();
+                // Simple eye
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(this.x + 4, this.y + 4, 4, 4);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(this.x + 5, this.y + 5, 2, 2);
                 
-                // Glowing edge
-                ctx.strokeStyle = '#FFD700';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                
-                // Bird eye
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(this.x + 30, this.y + 12, 6, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = 'black';
-                ctx.beginPath();
-                ctx.arc(this.x + 32, this.y + 12, 3, 0, Math.PI * 2);
-                ctx.fill();
+                // Running legs effect (simple)
+                if (!this.isJumping) {
+                    ctx.fillStyle = '#FF6347';
+                    const legOffset = Math.floor(Date.now() / 100) % 4;
+                    ctx.fillRect(this.x + 2 + legOffset, this.y + this.height, 3, 5);
+                    ctx.fillRect(this.x + this.width - 5 - legOffset, this.y + this.height, 3, 5);
+                }
             },
             
             reset() {
-                this.x = 100;
-                this.y = canvas.height / 2;
+                this.x = 80;
+                this.y = this.groundY;
                 this.velocity = 0;
+                this.isJumping = false;
             }
         };
 
-        // Pipes array - now look like fire gates
-        const pipes = [];
-        const pipeWidth = 70;
-        const pipeGap = 190;
-        const pipeSpeed = 2;
+        // Ground scrolling effect
+        let groundOffset = 0;
         
-        function createPipe() {
-            const minHeight = 60;
-            const maxHeight = canvas.height - pipeGap - minHeight;
-            const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+        function drawGround() {
+            ctx.fillStyle = '#535353';
+            // Draw ground
+            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
             
-            pipes.push({
+            // Draw ground pattern (simple dashed line effect)
+            ctx.fillStyle = '#666';
+            for (let x = groundOffset; x < canvas.width + 20; x += 20) {
+                ctx.fillRect(x, groundY - 2, 10, 2);
+            }
+        }
+
+        // Obstacles that come from the right
+        const obstacles = [];
+        const obstacleWidth = 20;
+        const obstacleHeight = 40;
+        
+        function createObstacle() {
+            obstacles.push({
                 x: canvas.width,
-                topHeight: topHeight,
-                bottomY: topHeight + pipeGap,
-                bottomHeight: canvas.height - (topHeight + pipeGap),
+                y: groundY - obstacleHeight,
+                width: obstacleWidth,
+                height: obstacleHeight,
                 passed: false
             });
         }
 
-        function updatePipes() {
+        function updateObstacles() {
             if (gameState !== 'playing') return;
             
-            for (let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= pipeSpeed;
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= gameSpeed;
                 
-                if (pipes[i].x + pipeWidth < 0) {
-                    pipes.splice(i, 1);
+                // Remove off-screen obstacles
+                if (obstacles[i].x + obstacles[i].width < 0) {
+                    obstacles.splice(i, 1);
                     continue;
                 }
                 
-                if (!pipes[i].passed && pipes[i].x + pipeWidth < bird.x) {
-                    pipes[i].passed = true;
+                // Score when passing obstacle
+                if (!obstacles[i].passed && obstacles[i].x + obstacles[i].width < player.x) {
+                    obstacles[i].passed = true;
                     score++;
                     scoreElement.textContent = score;
+                    
+                    // Increase game speed slightly
+                    if (score % 5 === 0) {
+                        gameSpeed += 0.2;
+                    }
                 }
                 
-                if (checkCollision(bird, pipes[i])) {
+                // Check collision
+                if (checkCollision(player, obstacles[i])) {
                     gameOver();
                     return;
                 }
             }
             
-            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 280) {
-                createPipe();
+            // Create new obstacles
+            if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - 300) {
+                createObstacle();
             }
         }
 
-        function drawPipes() {            
-            pipes.forEach(pipe => {
-                // Fire gate design
-                const gradient = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipeWidth, 0);
-                gradient.addColorStop(0, '#FFD700');
-                gradient.addColorStop(0.5, '#FFA500');
-                gradient.addColorStop(1, '#FF6347');
+        function drawObstacles() {
+            ctx.fillStyle = '#535353';
+            
+            obstacles.forEach(obstacle => {
+                // Draw obstacle as a cactus-like shape
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 
-                ctx.fillStyle = gradient;
-                
-                // Top gate
-                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
-                // Bottom gate
-                ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, pipe.bottomHeight);
-                
-                // Fire gate caps with glow
-                ctx.shadowColor = '#FFD700';
-                ctx.shadowBlur = 10;
-                ctx.fillStyle = '#FF4500';
-                ctx.fillRect(pipe.x - 8, pipe.topHeight - 35, pipeWidth + 16, 35);
-                ctx.fillRect(pipe.x - 8, pipe.bottomY, pipeWidth + 16, 35);
-                
-                // Reset shadow
-                ctx.shadowBlur = 0;
-                
-                // Fire symbols
-                ctx.fillStyle = '#FFD700';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('🔥', pipe.x + pipeWidth/2, pipe.topHeight - 10);
-                ctx.fillText('🔥', pipe.x + pipeWidth/2, pipe.bottomY + 25);
+                // Add some simple detail
+                ctx.fillStyle = '#666';
+                ctx.fillRect(obstacle.x + 2, obstacle.y + 5, 4, 8);
+                ctx.fillRect(obstacle.x + obstacle.width - 6, obstacle.y + 10, 4, 8);
+                ctx.fillStyle = '#535353';
             });
         }
 
-        function updateFlames() {
-            for (let i = flames.length - 1; i >= 0; i--) {
-                flames[i].update();
-                if (flames[i].life <= 0) {
-                    flames.splice(i, 1);
-                }
-            }
-        }
-
-        function drawFlames() {
-            flames.forEach(flame => flame.draw());
-        }
-
-        function checkCollision(bird, pipe) {
-            if (bird.x < pipe.x + pipeWidth && bird.x + bird.width > pipe.x) {
-                if (bird.y < pipe.topHeight || bird.y + bird.height > pipe.bottomY) {
-                    return true;
-                }
-            }
-            return false;
+        function checkCollision(player, obstacle) {
+            return player.x < obstacle.x + obstacle.width &&
+                   player.x + player.width > obstacle.x &&
+                   player.y < obstacle.y + obstacle.height &&
+                   player.y + player.height > obstacle.y;
         }
 
         function drawBackground() {
-            // Fiery gradient background
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, '#FF4500');
-            gradient.addColorStop(0.3, '#FF6347');
-            gradient.addColorStop(0.7, '#FFD700');
-            gradient.addColorStop(1, '#FFA500');
-            
-            ctx.fillStyle = gradient;
+            // Simple white background
+            ctx.fillStyle = '#fff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Animated fire clouds
-            ctx.fillStyle = 'rgba(255, 165, 0, 0.3)';
-            const time = Date.now() * 0.001;
-            drawFireCloud(100 + Math.sin(time) * 20, 80, 45);
-            drawFireCloud(300 + Math.cos(time * 0.8) * 15, 120, 40);
-            drawFireCloud(400 + Math.sin(time * 1.2) * 25, 60, 35);
+            // Simple clouds that move
+            ctx.fillStyle = '#ddd';
+            const cloudOffset = (Date.now() * 0.05) % (canvas.width + 100);
+            drawCloud(100 - cloudOffset, 50);
+            drawCloud(300 - cloudOffset, 80);
+            drawCloud(500 - cloudOffset, 60);
+            drawCloud(700 - cloudOffset, 70);
         }
 
-        function drawFireCloud(x, y, size) {
-            ctx.save();
-            ctx.globalAlpha = 0.6;
-            ctx.beginPath();
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.arc(x + size * 0.6, y, size * 0.8, 0, Math.PI * 2);
-            ctx.arc(x + size * 1.2, y, size * 0.7, 0, Math.PI * 2);
-            ctx.arc(x - size * 0.4, y, size * 0.6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
+        function drawCloud(x, y) {
+            if (x > -100 && x < canvas.width + 100) {
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI * 2);
+                ctx.arc(x + 20, y, 20, 0, Math.PI * 2);
+                ctx.arc(x + 40, y, 15, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
 
         function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             drawBackground();
-            updateFlames();
-            drawFlames();
             
-            bird.update();
-            updatePipes();
+            // Update ground scrolling
+            if (gameState === 'playing') {
+                groundOffset -= gameSpeed;
+                if (groundOffset <= -20) {
+                    groundOffset = 0;
+                }
+            }
             
-            drawPipes();
-            bird.draw();
+            drawGround();
+            
+            player.update();
+            updateObstacles();
+            
+            drawObstacles();
+            player.draw();
             
             requestAnimationFrame(gameLoop);
         }
@@ -458,21 +338,23 @@
         function startGame() {
             gameState = 'playing';
             score = 0;
-            pipes.length = 0;
-            flames.length = 0;
+            gameSpeed = 4;
+            obstacles.length = 0;
+            groundOffset = 0;
             
-            bird.reset();
+            player.reset();
             
             startScreen.classList.add('hidden');
             gameOverScreen.classList.add('hidden');
             scoreElement.classList.remove('hidden');
             scoreElement.textContent = '0';
             
+            // Create first obstacle after delay
             setTimeout(() => {
                 if (gameState === 'playing') {
-                    createPipe();
+                    createObstacle();
                 }
-            }, 1500);
+            }, 2000);
         }
 
         function gameOver() {
@@ -480,7 +362,7 @@
             
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem('flappyBlazeHighScore', highScore);
+                localStorage.setItem('runnerGameHighScore', highScore);
             }
             
             scoreElement.classList.add('hidden');
@@ -495,7 +377,7 @@
                 if (gameState === 'start') {
                     startGame();
                 } else if (gameState === 'playing') {
-                    bird.jump();
+                    player.jump();
                 } else if (gameState === 'gameOver') {
                     startGame();
                 }
@@ -506,7 +388,7 @@
             if (gameState === 'start') {
                 startGame();
             } else if (gameState === 'playing') {
-                bird.jump();
+                player.jump();
             } else if (gameState === 'gameOver') {
                 startGame();
             }
@@ -517,12 +399,13 @@
             if (gameState === 'start') {
                 startGame();
             } else if (gameState === 'playing') {
-                bird.jump();
+                player.jump();
             } else if (gameState === 'gameOver') {
                 startGame();
             }
         });
 
+        // Start the game loop
         gameLoop();
     </script>
 </body>
